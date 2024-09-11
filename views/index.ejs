@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+  </head>
+  <body>
+    <h1>Badminton class</h1>
+    <h3>Nhập tuần bạn kiểm tra sinh viên vắng:</h3>
+    <input type="number" id="inputWeek" />
+    <button type="button" onclick="getData()">Lấy danh sách</button>
+    <h2 id="tit">Danh sách sinh viên vắng</h2>
+    <div id="absentStudentList"></div>
+    <script>
+      function getData() {
+        const week = document.getElementById("inputWeek").value;
+        fetch(`/getData?week=${week}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const absentJSON = data;
+            // console.log(JSON.stringify(absentJSON, null, 2));
+            //   console.log(JSON.stringify(absentJSON,null,2));
+            let tit = document.getElementById("tit");
+            tit.innerHTML = `Danh sách sinh viên vắng ${absentJSON["Week"]} lớp cầu lông sáng thứ 5 tiết 1-2`;
+            let absentListDiv = document.getElementById('absentStudentList');
+            absentListDiv.innerHTML = '';
+            absentJSON["teamList"].forEach((team) => {
+              let teamUL = document.createElement('ul');
+              teamUL.innerHTML = team["Name"] + " : " + (team["Total"] - team["List"].length).toString() + " / " + team["Total"] +'\n' ;
+              team["List"].forEach((student) => {
+                let studentLI = document.createElement('li');
+                studentLI.innerHTML = student["MSSV"] + " | " + student["Name"] + " | " + student["Reason"];
+                teamUL.appendChild(studentLI);
+              });
+              absentListDiv.appendChild(teamUL);
+              console.log(team["List"]);
+            });
+          })
+          .catch((error) => {
+            console.error("Error: ", error);
+          });
+      }
+    </script>
+  </body>
+</html>
