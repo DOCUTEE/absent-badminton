@@ -28,7 +28,7 @@ async function getAbsentStudentList(need) {
       let absentList = {
             "Week": strWeek,
             "teamList": [
-
+                  
             ]
       }
       // console.log(absentList);
